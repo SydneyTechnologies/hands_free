@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<robot name="hands_free" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <material name="red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+    </material>
+    
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+    </material>
+
+
+    <link name="base_link">
+    </link>
+
+    <link name="base_footprint">
+    </link>
+
+    <joint name="base_footprint_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="base_footprint"/>
+    </joint>
+
+    <joint name="base_chassis" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
+    </joint>
+
+    <link name="chassis_link">
+        <visual>
+            <material name="white"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.27 0.27 0.1"/>
+            </geometry>
+        </visual>    
+    </link>
+
+    <xacro:macro name="wheel" params="name xyz rpy">
+        <link name="${name}">
+            <visual>
+                <material name="white"/>
+                <origin xyz="${xyz}" rpy="${rpy}"/>
+                <geometry>
+                    <cylinder radius="0.0475" length="0.042"/>
+                </geometry>
+            </visual>
+        </link>
+    </xacro:macro>
+    
+    <xacro:macro name="wheel_joint" params="name parent child xyz rpy">
+        <joint name="${name}" type="continuous">
+            <origin xyz="${xyz}" rpy="${rpy}"/>
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+        </joint>    
+    </xacro:macro>
+
+
+    <link name="lidar_link">
+        <visual>
+          <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+          <geometry>
+            <cylinder radius="0.032" length="0.028"/>
+          </geometry>
+          <material name="red"/>
+        </visual>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+      <origin xyz="0.110 0.0 0.06" rpy="0.0 0.0 0.0"/>
+      <parent link="base_link"/>
+      <child link="lidar_link"/>
+    </joint>
+
+    <xacro:wheel_joint name="back_left_wheel_joint" xyz="-0.090 -0.135 -0.040" rpy="0 0 0" parent="chassis_link" child="back_left_wheel"/>
+    <xacro:wheel name="back_left_wheel" xyz="0.0 0.0 0.0" rpy="0.0 1.57 1.57"/>
+
+    <xacro:wheel_joint name="back_right_wheel_joint" xyz="-0.090 0.135 -0.040" rpy="0 0 0" parent="chassis_link" child="back_right_wheel"/>
+    <xacro:wheel name="back_right_wheel" xyz="0.0 0.0 0.0" rpy="0.0 1.57 1.57"/>
+
+</robot>
